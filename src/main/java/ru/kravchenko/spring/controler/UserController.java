@@ -1,5 +1,6 @@
 package ru.kravchenko.spring.controler;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,17 +24,18 @@ public class UserController {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private IUserRepository userDAO;
+
     @PostMapping("authorization")
     public String authorization(
             @RequestParam("login") final String login,
             @RequestParam("password") final String password,
             @NotNull final HttpSession session
     ) {
-        if (userRepository.loginExist(login)) {
+        if (userDAO.checkLoginPassword(login, password)) {
             System.out.println("login: " + login + " password: " + password);
-            final User user = new User();
-            user.setPassword(password);
-            user.setLogin(login);
+            final User user = userDAO.findByLogin(login);
             session.setAttribute(FieldConst.USER, user);
             return "redirect:/main";
         }
@@ -49,8 +51,8 @@ public class UserController {
         if (!userRepository.loginExist(login)) {
             final User user = new User();
             user.setLogin(login);
-            user.setPassword(password);
-            userRepository.merge(user);
+            user.setPasswordHash(DigestUtils.md5Hex(password));
+            userDAO.persist(user);
             System.out.println("User - " + login + " registry");
             return "redirect:/registry";
         }
@@ -64,4 +66,5 @@ public class UserController {
         System.out.println("User logout");
         return "redirect:/index.jsp";
     }
+
 }

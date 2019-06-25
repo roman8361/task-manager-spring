@@ -13,6 +13,7 @@ import ru.kravchenko.spring.api.IProjectRepository;
 import ru.kravchenko.spring.api.ISessionService;
 import ru.kravchenko.spring.constant.FieldConst;
 import ru.kravchenko.spring.entity.Project;
+import ru.kravchenko.spring.entity.User;
 import ru.kravchenko.spring.exception.AuthenticationException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +41,9 @@ public class ProjectController {
         try {
             if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
             sessionService.validateSession(session);
-            final Iterable<Project> projects = projectRepository.findAll();
+            final User currentUser = (User) session.getAttribute(FieldConst.USER);
+            System.out.println("ID CURRENT USER: " + currentUser.getId());
+            final Iterable<Project> projects = projectRepository.findAllProjectByUserId(currentUser.getId());
             model.addAttribute("projects", projects);
 
         } catch (AuthenticationException e) {
@@ -53,13 +56,15 @@ public class ProjectController {
     public String projectCreate(final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
         final Project project = new Project();
+        final User currentUser = (User) session.getAttribute(FieldConst.USER);
         project.setName("New Project");
         project.setDescription("");
-        projectRepository.merge(project);
+        project.setUser(currentUser);
+        projectRepository.insert(project);
         return "redirect:/project-list";
     }
 
-    @GetMapping("project-edit/{id}")
+    @GetMapping("/project-edit/{id}")
     public String projectEdit(final Model model,
                               @PathVariable("id") final String id,
                               final HttpSession session) {
@@ -91,11 +96,11 @@ public class ProjectController {
     public String projectSave(@ModelAttribute("project") final Project project,
                               final BindingResult result,
                               final HttpSession session) {
+
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
-        if (!result.hasErrors()) projectRepository.save(project);
-        for (Project p : projectRepository.findAll()) { //TODO dell later
-            System.out.println(p.getId());
-        }
+        final User currentUser = (User) session.getAttribute(FieldConst.USER);
+        project.setUser(currentUser);
+        if (!result.hasErrors()) projectRepository.update(project);
         return "redirect:/project-list";
     }
 

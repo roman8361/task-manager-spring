@@ -5,10 +5,11 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 /**
  * @author Roman Kravchenko
  */
+
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{};
+        return new Class[]{DataBaseConfig.class};
     }
 
     protected Class<?>[] getServletConfigClasses() { return new Class[]{WebMvcConfig.class}; }

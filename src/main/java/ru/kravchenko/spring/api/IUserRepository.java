@@ -2,20 +2,20 @@ package ru.kravchenko.spring.api;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Repository;
 import ru.kravchenko.spring.entity.User;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Roman Kravchenko
  */
 
-@Repository
 public interface IUserRepository {
 
+    void persist(final User user);
+
     @NotNull
-    Collection<User> findAll();
+    List<User> findAll();
 
     @Nullable
     User findById(@Nullable String id);
@@ -24,14 +24,16 @@ public interface IUserRepository {
     User findByLogin(@Nullable String login);
 
     @Nullable
-    User merge(@Nullable User user);
+    void merge(@Nullable User user);
 
     void removeById(@Nullable String id);
 
     void removeAll();
 
-    void init();
-
     boolean loginExist(@Nullable String login);
+
+    List<String> loginList();
+
+    boolean checkLoginPassword(@Nullable final String login, @Nullable final String password);
 
 }

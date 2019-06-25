@@ -13,6 +13,7 @@ import ru.kravchenko.spring.api.ISessionService;
 import ru.kravchenko.spring.api.ITaskRepository;
 import ru.kravchenko.spring.constant.FieldConst;
 import ru.kravchenko.spring.entity.Task;
+import ru.kravchenko.spring.entity.User;
 import ru.kravchenko.spring.exception.AuthenticationException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ import java.io.IOException;
 public class TaskController {
 
     @Autowired
-    private ITaskRepository taskRepository;
+    private ITaskRepository taskRepository1;
 
     @NotNull
     @Autowired
@@ -40,9 +41,11 @@ public class TaskController {
         try {
             if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
             sessionService.validateSession(session);
-            final Iterable<Task> tasks = taskRepository.findAll();
+            final User currentUser = (User) session.getAttribute(FieldConst.USER);
+            System.out.println("ID CURRENT USER: " + currentUser.getId());
+
+            final Iterable<Task> tasks = taskRepository1.findAllTaskByUserId(currentUser.getId());
             model.addAttribute("tasks", tasks);
-            for (Task t : taskRepository.findAll()) System.out.println(t.getId()); //TODO dell later
         } catch (AuthenticationException e) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
@@ -53,9 +56,11 @@ public class TaskController {
     public String taskCreate(final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
         final Task task = new Task();
+        final User currentUser = (User) session.getAttribute(FieldConst.USER);
         task.setName("New TASK");
         task.setDescription("");
-        taskRepository.merge(task);
+        task.setUser(currentUser);
+        taskRepository1.persist(task);
         return "redirect:/task-list";
     }
 
@@ -64,7 +69,8 @@ public class TaskController {
                               @PathVariable("id") final String id,
                               final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
-        final Task task = taskRepository.findById(id);
+        final Task task = taskRepository1.findById(id);
+
         model.addAttribute("task", task);
         return "task-edit";
     }
@@ -74,7 +80,7 @@ public class TaskController {
                               @PathVariable("id") final String id,
                               final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
-        final Task task = taskRepository.findById(id);
+        final Task task = taskRepository1.findById(id);
         model.addAttribute("task", task);
         return "task-view";
     }
@@ -83,7 +89,7 @@ public class TaskController {
     public String taskDelete(@PathVariable("id") final String id, final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
         System.out.println(id);
-        taskRepository.removeById(id);
+        taskRepository1.removeById(id);
         return "redirect:/task-list";
     }
 
@@ -92,9 +98,9 @@ public class TaskController {
                               final BindingResult result,
                               final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
-        if (!result.hasErrors()) taskRepository.merge(task);
-        for (Task t : taskRepository.findAll()) System.out.println(t.getId()); //TODO dell later
-
+        final User currentUser = (User) session.getAttribute(FieldConst.USER);
+        task.setUser(currentUser);
+        if (!result.hasErrors()) taskRepository1.update(task);
         return "redirect:/task-list";
     }
 

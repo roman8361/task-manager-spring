@@ -2,34 +2,31 @@ package ru.kravchenko.spring.api;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Repository;
 import ru.kravchenko.spring.entity.Task;
 
-import java.util.Collection;
+import java.util.List;
 
-@Repository
+/**
+ * @author Roman Kravchenko
+ */
+
 public interface ITaskRepository {
 
     @NotNull
-    Collection<Task> findAll();
+    List<Task> findAll();
 
     @Nullable
     Task findById(@Nullable String id);
 
-    @NotNull
-    Collection<Task> findByIds(@Nullable Collection<String> ids);
+    List<Task> findAllTaskByUserId(final String userId);
 
     @Nullable
-    Task merge(@Nullable Task project);
+    void update(@Nullable Task task);
 
     @Nullable
-    Collection<Task> merge(@Nullable Collection<Task> tasks);
+    void persist(@Nullable Task task);
 
     void removeById(@Nullable String id);
-
-    void removeByIds(@Nullable Collection<String> ids);
-
-    void remove(@Nullable Collection<Task> tasks);
 
     void removeAll();
 

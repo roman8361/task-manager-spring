@@ -1,38 +1,31 @@
 package ru.kravchenko.spring.api;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Repository;
 import ru.kravchenko.spring.entity.Project;
 
-import java.util.Collection;
+import java.util.List;
 
-@Repository
+/**
+ * @author Roman Kravchenko
+ */
+
 public interface IProjectRepository {
 
-    @NotNull
-    Collection<Project> findAll();
+    List<Project> findAll();
 
-    Project findById(@Nullable String id);
+    List<String> ids();
 
-    @NotNull
-    Collection<Project> findByIds(@Nullable Collection<String> ids);
+    Project findById(final String id);
 
-    @Nullable
-    Project merge(@Nullable Project project);
+    List<Project> findAllProjectByUserId(final String userId);
 
-    @Nullable
-    Project save(@Nullable Project project);
+    void removeById(final String id);
 
-    @Nullable
-    Collection<Project> merge(@Nullable Collection<Project> projects);
+    void removeAllProjectByUserId(final String userId);
 
-    void removeById(@Nullable String id);
+    void insert(final Project project);
 
-    void removeByIds(@Nullable Collection<String> ids);
+    void update(final Project project);
 
-    void remove(@Nullable Collection<Project> projects);
-
-    void removeAll();
+    void clear();
 
 }
