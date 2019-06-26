@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.kravchenko.spring.api.ISessionService;
-import ru.kravchenko.spring.api.ITaskRepository;
+import ru.kravchenko.spring.api.serive.ISessionService;
+import ru.kravchenko.spring.api.serive.ITaskService;
 import ru.kravchenko.spring.constant.FieldConst;
 import ru.kravchenko.spring.entity.Task;
 import ru.kravchenko.spring.entity.User;
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class TaskController {
 
     @Autowired
-    private ITaskRepository taskRepository1;
+    private ITaskService taskRepository1;
 
     @NotNull
     @Autowired

@@ -1,4 +1,4 @@
-package java.ru.kravchenko.test;
+package ru.kravchenko.test;
 
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.kravchenko.spring.api.IProjectRepository;
-import ru.kravchenko.spring.api.IUserRepository;
+import ru.kravchenko.spring.api.serive.IProjectService;
+import ru.kravchenko.spring.api.serive.IUserService;
 import ru.kravchenko.spring.configuration.DataBaseConfig;
 import ru.kravchenko.spring.entity.Project;
 
@@ -23,10 +23,10 @@ public class ProjectTest {
     private Lorem lorem = new LoremIpsum();
 
     @Autowired
-    private IProjectRepository projectRepository;
+    private IProjectService projectRepository;
 
     @Autowired
-    private IUserRepository userRepository;
+    private IUserService userRepository;
 
     @Test
     public void insertAnyProject() {

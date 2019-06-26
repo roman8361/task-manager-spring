@@ -1,4 +1,4 @@
-package ru.kravchenko.spring.api;
+package ru.kravchenko.spring.api.serive;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;

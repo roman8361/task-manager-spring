@@ -1,4 +1,4 @@
-package java.ru.kravchenko.test;
+package ru.kravchenko.test;
 
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.kravchenko.spring.api.IUserRepository;
+import ru.kravchenko.spring.api.serive.IUserService;
 import ru.kravchenko.spring.configuration.DataBaseConfig;
 import ru.kravchenko.spring.entity.User;
 
@@ -22,7 +22,7 @@ public class UserTest {
     private Lorem lorem = new LoremIpsum();
 
     @Autowired
-    private IUserRepository userDAO;
+    private IUserService userDAO;
 
     @Test
     public void ids() {
@@ -46,7 +46,7 @@ public class UserTest {
 
     @Test
     public void insertAny() {
-        for (int i = 0; i < 10; i++) insertOne();
+        for (int i = 0; i < 2; i++) insertOne();
     }
 
     public void insertOne() {

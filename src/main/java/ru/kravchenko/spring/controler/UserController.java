@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.kravchenko.spring.api.IUserRepository;
+import ru.kravchenko.spring.api.serive.IUserService;
 import ru.kravchenko.spring.constant.FieldConst;
 import ru.kravchenko.spring.entity.User;
 
@@ -22,10 +22,7 @@ import java.io.IOException;
 public class UserController {
 
     @Autowired
-    private IUserRepository userRepository;
-
-    @Autowired
-    private IUserRepository userDAO;
+    private IUserService userDAO;
 
     @PostMapping("authorization")
     public String authorization(
@@ -48,7 +45,7 @@ public class UserController {
             @RequestParam("login") String login,
             @RequestParam("password") String password
     ) throws IOException {
-        if (!userRepository.loginExist(login)) {
+        if (!userDAO.loginExist(login)) {
             final User user = new User();
             user.setLogin(login);
             user.setPasswordHash(DigestUtils.md5Hex(password));

@@ -1,4 +1,4 @@
-package ru.kravchenko.spring.api;
+package ru.kravchenko.spring.api.serive;
 
 import ru.kravchenko.spring.entity.Project;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @author Roman Kravchenko
  */
 
-public interface IProjectRepository {
+public interface IProjectService {
 
     List<Project> findAll();
 

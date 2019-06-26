@@ -1,4 +1,4 @@
-package ru.kravchenko.spring.api;
+package ru.kravchenko.spring.api.serive;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +10,7 @@ import java.util.List;
  * @author Roman Kravchenko
  */
 
-public interface IUserRepository {
+public interface IUserService {
 
     void persist(final User user);
 

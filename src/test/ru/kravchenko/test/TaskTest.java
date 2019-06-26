@@ -1,4 +1,4 @@
-package java.ru.kravchenko.test;
+package ru.kravchenko.test;
 
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.kravchenko.spring.api.IProjectRepository;
-import ru.kravchenko.spring.api.ITaskRepository;
-import ru.kravchenko.spring.api.IUserRepository;
+import ru.kravchenko.spring.api.serive.IProjectService;
+import ru.kravchenko.spring.api.serive.ITaskService;
+import ru.kravchenko.spring.api.serive.IUserService;
 import ru.kravchenko.spring.configuration.DataBaseConfig;
 import ru.kravchenko.spring.entity.Task;
 
@@ -24,13 +24,13 @@ public class TaskTest {
     private Lorem lorem = new LoremIpsum();
 
     @Autowired
-    private IProjectRepository projectRepository;
+    private IProjectService projectRepository;
 
     @Autowired
-    private IUserRepository userRepository;
+    private IUserService userRepository;
 
     @Autowired
-    private ITaskRepository taskRepository;
+    private ITaskService taskRepository;
 
     @Test
     public void insertAnyTask() {
@@ -40,7 +40,6 @@ public class TaskTest {
     @Test
     public void insertOneTask() {
         final Task task  = new Task();
-
         task.setProject(projectRepository.findById("31632cc8-612f-4368-a99e-d59336783e4e"));
         task.setUser(projectRepository.findById("31632cc8-612f-4368-a99e-d59336783e4e").getUser());
         task.setName(lorem.getWords(1));

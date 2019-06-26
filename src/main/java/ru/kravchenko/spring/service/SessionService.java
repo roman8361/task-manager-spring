@@ -2,7 +2,7 @@ package ru.kravchenko.spring.service;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import ru.kravchenko.spring.api.ISessionService;
+import ru.kravchenko.spring.api.serive.ISessionService;
 import ru.kravchenko.spring.constant.FieldConst;
 import ru.kravchenko.spring.exception.AuthenticationException;
 

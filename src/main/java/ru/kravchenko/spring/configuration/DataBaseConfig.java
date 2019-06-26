@@ -1,5 +1,6 @@
 package ru.kravchenko.spring.configuration;
 
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,8 +25,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @PropertySource("classpath:db-conf.properties")
 @ComponentScan(basePackages = "ru.kravchenko.spring")
-//@EnableJpaRepositories(basePackages = "ru.kravchenko.spring.api") // Конфигурация для подключения Спринг Дата
-
+@EnableJpaRepositories(basePackages = "ru.kravchenko.spring.api.jpa") // Конфигурация для подключения Спринг Дата
 public class DataBaseConfig {
     @Bean
     public DataSource dataSource(
@@ -58,6 +58,15 @@ public class DataBaseConfig {
         properties.put("hibernate.show_sql", showSql);
         properties.put("hibernate.hbm2ddl.auto", tableStrategy);
         properties.put("hibernate.dialect", dialect);
+
+        properties.put(Environment.USE_SECOND_LEVEL_CACHE, "true");
+        properties.put(Environment.USE_QUERY_CACHE, "true");
+        properties.put(Environment.USE_MINIMAL_PUTS, "true");
+        properties.put("hibernate.cache.hazelcast.use_lite_member", "true");
+        properties.put(Environment.CACHE_REGION_PREFIX, "task-manager");
+        properties.put(Environment.CACHE_PROVIDER_CONFIG, "hazelcast.xml");
+        properties.put(Environment.CACHE_REGION_FACTORY, "com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory");
+
         factoryBean.setJpaProperties(properties);
         return factoryBean;
     }

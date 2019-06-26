@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.kravchenko.spring.api.IProjectRepository;
-import ru.kravchenko.spring.api.ISessionService;
+import ru.kravchenko.spring.api.serive.IProjectService;
+import ru.kravchenko.spring.api.serive.ISessionService;
 import ru.kravchenko.spring.constant.FieldConst;
 import ru.kravchenko.spring.entity.Project;
 import ru.kravchenko.spring.entity.User;
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class ProjectController {
 
     @Autowired
-    private IProjectRepository projectRepository;
+    private IProjectService projectService;
 
     @NotNull
     @Autowired
@@ -43,7 +43,7 @@ public class ProjectController {
             sessionService.validateSession(session);
             final User currentUser = (User) session.getAttribute(FieldConst.USER);
             System.out.println("ID CURRENT USER: " + currentUser.getId());
-            final Iterable<Project> projects = projectRepository.findAllProjectByUserId(currentUser.getId());
+            final Iterable<Project> projects = projectService.findAllProjectByUserId(currentUser.getId());
             model.addAttribute("projects", projects);
 
         } catch (AuthenticationException e) {
@@ -60,7 +60,7 @@ public class ProjectController {
         project.setName("New Project");
         project.setDescription("");
         project.setUser(currentUser);
-        projectRepository.insert(project);
+        projectService.insert(project);
         return "redirect:/project-list";
     }
 
@@ -69,7 +69,7 @@ public class ProjectController {
                               @PathVariable("id") final String id,
                               final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
-        final Project project = projectRepository.findById(id);
+        final Project project = projectService.findById(id);
         model.addAttribute("project", project);
         return "project-edit";
     }
@@ -79,7 +79,7 @@ public class ProjectController {
                               @PathVariable("id") final String id,
                               final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
-        final Project project = projectRepository.findById(id);
+        final Project project = projectService.findById(id);
         model.addAttribute("project", project);
         return "project-view";
     }
@@ -88,7 +88,7 @@ public class ProjectController {
     public String projectDelete(@PathVariable("id") final String id, final HttpSession session) {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
         System.out.println(id);
-        projectRepository.removeById(id);
+        projectService.removeById(id);
         return "redirect:/project-list";
     }
 
@@ -100,7 +100,7 @@ public class ProjectController {
         if (session.getAttribute(FieldConst.USER) == null) return "redirect:/sessionNotFound";
         final User currentUser = (User) session.getAttribute(FieldConst.USER);
         project.setUser(currentUser);
-        if (!result.hasErrors()) projectRepository.update(project);
+        if (!result.hasErrors()) projectService.update(project);
         return "redirect:/project-list";
     }
 
